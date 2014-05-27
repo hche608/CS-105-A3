@@ -92,6 +92,27 @@ public class TextZip {
 	public static void traverse(TreeNode<CharFreq> t, String code) {
 
 		// IMPLEMENT THIS METHOD
+		if(debug){
+			System.out.println( t + " " + t.getLeft() + " "+ t.getRight());
+		}
+		
+		System.out.println("get code");
+		
+		if( t == null){
+			System.out.println("Empty tree!");
+		} else if (t.isLeaf()){
+			System.out.print(t.getItem().getChar() + " : ");
+		} else if (t.getLeft() != null){
+			System.out.print("0");
+			traverse(t.getLeft(), code += "0");
+		} else if (t.getRight() != null){
+			System.out.print("1");
+			traverse(t.getRight(), code += "1");
+		}
+		
+		
+		
+
 		
 	}
 
@@ -213,23 +234,24 @@ public class TextZip {
 	public static TreeNode<CharFreq> buildTree(ArrayList<TreeNode<CharFreq>> trees) throws IOException {
 
 		// IMPLEMENT THIS METHOD
-		TreeNode<CharFreq> currentNode,previousNode,nextNode1,nextNode2,root;
+		TreeNode<CharFreq> root;
 
 		ArrayList<TreeNode<CharFreq>> nodesList = new ArrayList<TreeNode<CharFreq>>();
+		int sumFreq;
+		
 		while(trees.size() > 0){
 			if(debug){
-				System.out.println("\nTree nodes list start: ");
+				System.out.println("Tree nodes list start: ");
 				for(int i = 0; i < trees.size();i++){
 					System.out.println(trees.get(i));		
 				}
-				System.out.println("Tree nodes list end.");
+				System.out.println("Tree nodes list end.\n");
 			}
 			nodesList.add(trees.get(0));
 			trees.remove(0);
 			nodesList.add(trees.get(0));
 			trees.remove(0);
 			
-			int sumFreq;
 			sumFreq = nodesList.get(nodesList.size()-2).getItem().getFreq() + nodesList.get(nodesList.size()-1).getItem().getFreq();
 			
 			for(int i = 0; i < trees.size(); i++){
@@ -243,10 +265,12 @@ public class TextZip {
 				} 
 			}
 		}
+		sumFreq = nodesList.get(nodesList.size()-2).getItem().getFreq() + nodesList.get(nodesList.size()-1).getItem().getFreq();
+		nodesList.add(new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
 		root = nodesList.get(nodesList.size() - 1);
 		if(debug){
 			System.out.println("Trees size : " + trees.size());
-			System.out.println("Tree nodes list: ");
+			System.out.println("\nTree nodes list: ");
 			for(int i = 0; i < nodesList.size();i++){
 				System.out.println(nodesList.get(i));		
 			}
