@@ -47,12 +47,31 @@ public class TextZip {
 	public static void decompress(BitReader br, TreeNode<CharFreq> huffman, FileWriter fw) throws Exception {
 
 		// IMPLEMENT THIS METHOD
-		System.out.println(br);
+		String val = "";
+		while(br.hasNext()){
+			if(br.next()){
+				System.out.print("1");
+				val += 1;
+			}
+			else {
+				System.out.print("0");
+				val += 0;
+			}
+		}		
+		System.out.println("\n" + val);
 		
+		String s = "";
+		for(int i = 0; i < val.length(); i++){
+			s = val.substring(i,i+1);
+			int currentVal = Integer.parseInt(s);
+			System.out.println(currentVal);
+		}
+
+
+		System.out.println(huffman.getLeft().getChar());
+		System.out.println("Here2");
 		
-		
-		
-		
+		fw.write("aasdasd");
 		
 
 	}
@@ -130,7 +149,7 @@ public class TextZip {
 	public static ArrayList<TreeNode<CharFreq>> countFrequencies(FileReader fr, PrintWriter pw) throws Exception {
 
 		// IMPLEMENT THIS METHOD
-
+		return null;
 	}
 
   /**
@@ -152,7 +171,7 @@ public class TextZip {
 	public static TreeNode<CharFreq> buildTree(ArrayList<TreeNode<CharFreq>> trees) throws IOException {
 
 		// IMPLEMENT THIS METHOD
-
+		return null;
 	}
 
   /**
@@ -190,7 +209,7 @@ public class TextZip {
 	public static ArrayList<TreeNode<CharFreq>> readFrequencies(String inputFreqFile) throws Exception {
 
 		// IMPLEMENT THIS METHOD
-
+		return null;
 	}
 	
   /**
@@ -201,8 +220,12 @@ public class TextZip {
 	*         file2: full name of the second file
 	*/	
 	public static void statistics(String file1, String file2) {
-		
-		// IMPLEMENT THIS METHOD
+		File compressedFile =new File(file1);
+		File originalFile =new File(file2);
+		System.out.println(file1 + " decompressed by hche608");
+		System.out.println("Size of the compressed file: " + compressedFile.length() + " bytes");
+		System.out.println("Size of the original file: " + originalFile.length() + " bytes");
+		System.out.println("Compressed ratio: " + (compressedFile.length() * 100 / originalFile.length()) + "%");
 		
 	}
 	
