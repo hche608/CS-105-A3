@@ -5,8 +5,9 @@ import java.util.*;
 COMPSCI 105 S1 C, 2014
 Assignment Three Question 1
 
-@author  	YOUR NAME and UPI
-@version	THE DATE
+@author  	Name: Hao CHEN 
+			UPI: hche608
+@version	DATE: May 2014
 **/
 
 public class TextZip {
