@@ -11,7 +11,7 @@ Assignment Three Question 1
 **/
 
 public class TextZip {
-	static boolean debug = false;
+	static boolean debug = true;
 	/**
 		* This method generates the huffman tree for the text: "abracadabra!"
 		*
@@ -26,7 +26,7 @@ public class TextZip {
 		TreeNode<CharFreq> n5 = new TreeNode<CharFreq>(new CharFreq('d', 1));
 		TreeNode<CharFreq> n6 = new TreeNode<CharFreq>(new CharFreq('b', 2));
 		TreeNode<CharFreq> n7 = new TreeNode<CharFreq>(new CharFreq('\u0000', 3), n5, n6);
-		TreeNode<CharFreq> n8 = new TreeNode<CharFreq>(new CharFreq('\u0000', '7'), n7, n4);
+		TreeNode<CharFreq> n8 = new TreeNode<CharFreq>(new CharFreq('\u0000', 7), n7, n4);
 		TreeNode<CharFreq> n9 = new TreeNode<CharFreq>(new CharFreq('a', 5));
 		TreeNode<CharFreq> n10 = new TreeNode<CharFreq>(new CharFreq('\u0000', 12), n9, n8);
 		return n10;
@@ -78,7 +78,6 @@ public class TextZip {
 		if(debug)		
 			System.out.println("\n" + val);	
 		fw.write(val);
-		
 
 	}
 
@@ -155,7 +154,44 @@ public class TextZip {
 	public static ArrayList<TreeNode<CharFreq>> countFrequencies(FileReader fr, PrintWriter pw) throws Exception {
 
 		// IMPLEMENT THIS METHOD
-		return null;
+		ArrayList<CharFreq> list= new ArrayList<CharFreq>();
+		ArrayList<TreeNode<CharFreq>> nodesList = new ArrayList<TreeNode<CharFreq>>();
+		int[] asciiMappingVal = new int[255];
+		int c, val;
+		while((c = fr.read()) != -1){			
+			//System.out.print(c + " ");
+			val = asciiMappingVal[c]++;		
+		}
+		
+		for(int i = 0; i < asciiMappingVal.length; i++){
+			if(asciiMappingVal[i]!= 0){
+				char ch = (char)i;
+				list.add(new CharFreq(ch, asciiMappingVal[i]));
+				pw.println(ch + " " + asciiMappingVal[i]);
+			}
+		}
+		for(int i = 0; i < list.size();i++){
+			for(int j = 0; j < list.size() - 1; j++){
+				CharFreq current = list.get(j);
+				CharFreq next = list.get(j + 1);
+				if(current.compareTo(next) > 0){
+					Collections.swap(list, j, j + 1);
+				}
+			}
+		}
+		
+		if(debug)
+			System.out.println("Sorted nodes list: ");
+		for(int i = 0; i < list.size(); i++){
+			if(debug)
+				System.out.println(list.get(i));
+			nodesList.add(new TreeNode<CharFreq>(list.get(i)));
+		}
+		if(debug)
+			System.out.println();				
+		
+		
+		return nodesList;
 	}
 
 	/**
@@ -177,7 +213,48 @@ public class TextZip {
 	public static TreeNode<CharFreq> buildTree(ArrayList<TreeNode<CharFreq>> trees) throws IOException {
 
 		// IMPLEMENT THIS METHOD
-		return null;
+		TreeNode<CharFreq> currentNode,previousNode,nextNode1,nextNode2,root;
+
+		ArrayList<TreeNode<CharFreq>> nodesList = new ArrayList<TreeNode<CharFreq>>();
+		while(trees.size() > 0){
+			if(debug){
+				System.out.println("\nTree nodes list start: ");
+				for(int i = 0; i < trees.size();i++){
+					System.out.println(trees.get(i));		
+				}
+				System.out.println("Tree nodes list end.");
+			}
+			nodesList.add(trees.get(0));
+			trees.remove(0);
+			nodesList.add(trees.get(0));
+			trees.remove(0);
+			
+			int sumFreq;
+			sumFreq = nodesList.get(nodesList.size()-2).getItem().getFreq() + nodesList.get(nodesList.size()-1).getItem().getFreq();
+			
+			for(int i = 0; i < trees.size(); i++){
+				if(trees.size() == 1){
+					if(sumFreq >= trees.get(i).getItem().getFreq()){
+						trees.add(i + 1,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+					}
+				} else if(sumFreq < trees.get(i).getItem().getFreq() && sumFreq >= trees.get(i - 1).getItem().getFreq()){
+					trees.add(i,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+					break;
+				} 
+			}
+		}
+		root = nodesList.get(nodesList.size() - 1);
+		if(debug){
+			System.out.println("Trees size : " + trees.size());
+			System.out.println("Tree nodes list: ");
+			for(int i = 0; i < nodesList.size();i++){
+				System.out.println(nodesList.get(i));		
+			}
+			System.out.println("Tree root : " + root);
+		}
+		
+		
+		return root;
 	}
 
 	/**
