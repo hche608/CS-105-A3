@@ -6,7 +6,7 @@ COMPSCI 105 S1 C, 2014
 Assignment Three Question 1
 
 @author  	Name: Hao CHEN 
-			UPI: hche608
+UPI: hche608
 @version	DATE: May 2014
 **/
 
@@ -46,10 +46,14 @@ public class TextZip {
 		*         fw:      a FileWriter for storing the decompressed text file
 		*/
 	public static void decompress(BitReader br, TreeNode<CharFreq> huffman, FileWriter fw) throws Exception {
-
-		// IMPLEMENT THIS METHOD
+		if(debug){
+			System.out.println("\nThis is decompress method!");
+		}
 		TreeNode<CharFreq> currentNode;
 		currentNode = huffman;
+		if(debug){
+			System.out.println("Current node is " + currentNode);
+		}
 		String val = "";
 		while(br.hasNext()){
 			if(br.next()){
@@ -90,32 +94,24 @@ public class TextZip {
 		*               the tree is traversed recursively
 		*/
 	public static void traverse(TreeNode<CharFreq> t, String code) {
-
-		// IMPLEMENT THIS METHOD
-		if(!debug){
+		if(debug){
 			System.out.println( t + " " + t.getLeft() + " "+ t.getRight());
 		}
-				
+	
 		if( t != null){
 			if (t.isLeaf()){
-				System.out.println(t.getItem().getChar() + " : ");
+				System.out.println(t.getItem().getChar() + " : " + code);
 			} else {
 				if (t.getLeft() != null){
-					System.out.print("0");
-					traverse(t.getLeft(), code += "0");
+					code += "0";
+					traverse(t.getLeft(), code);
 				}
 				if (t.getRight() != null){
-					System.out.print("1");
-					traverse(t.getRight(), code += "1");
+					code = code.substring(0,code.length() - 1) + "1";
+					traverse(t.getRight(), code);
 				}
 			}
-		}
-		
-		
-		
-		
-
-		
+		}		
 	}
 
 	/**
@@ -130,9 +126,29 @@ public class TextZip {
 		*                value of the characters.
 		*/
 	public static void traverse(TreeNode<CharFreq> t, String code, String[] codes) {
-		
-		// IMPLEMENT THIS METHOD
-
+		if(debug){
+			System.out.println( t + " " + t.getLeft() + " "+ t.getRight());
+		}
+	
+		if( t != null){
+			if (t.isLeaf()){
+				if(debug)
+					System.out.println(t.getItem().getChar() + " : " + code);
+				if(debug)
+					System.out.println((int) (t.getItem().getChar()));
+				codes[(int)t.getItem().getChar()] = code;
+					
+			} else {
+				if (t.getLeft() != null){
+					code += "0";
+					traverse(t.getLeft(), code, codes);
+				}
+				if (t.getRight() != null){
+					code = code.substring(0,code.length() - 1) + "1";
+					traverse(t.getRight(), code, codes);
+				}
+			}
+		}	
 	}
 
 	/**
@@ -175,14 +191,13 @@ public class TextZip {
 		*         TreeNode is a CharFreq object.
 		*/
 	public static ArrayList<TreeNode<CharFreq>> countFrequencies(FileReader fr, PrintWriter pw) throws Exception {
-
-		// IMPLEMENT THIS METHOD
 		ArrayList<CharFreq> list= new ArrayList<CharFreq>();
 		ArrayList<TreeNode<CharFreq>> nodesList = new ArrayList<TreeNode<CharFreq>>();
-		int[] asciiMappingVal = new int[255];
+		int[] asciiMappingVal = new int[256];
 		int c, val;
 		while((c = fr.read()) != -1){			
-			//System.out.print(c + " ");
+			if(debug)
+				System.out.print(c + " ");
 			val = asciiMappingVal[c]++;		
 		}
 		
@@ -234,8 +249,20 @@ public class TextZip {
 		* @return the TreeNode referring to the root of the completed huffman tree
 		*/
 	public static TreeNode<CharFreq> buildTree(ArrayList<TreeNode<CharFreq>> trees) throws IOException {
-
-		// IMPLEMENT THIS METHOD
+		
+		for(int i = 0; i < trees.size();i++){
+			for(int j = 0; j < trees.size() - 1; j++){
+				CharFreq current = trees.get(j).getItem();
+				CharFreq next = trees.get(j + 1).getItem();
+				if(current.compareTo(next) > 0){
+					Collections.swap(trees, j, j + 1);
+				}
+			}
+		}
+		
+		
+		
+		
 		TreeNode<CharFreq> root;
 
 		ArrayList<TreeNode<CharFreq>> nodesList = new ArrayList<TreeNode<CharFreq>>();
@@ -288,8 +315,7 @@ public class TextZip {
 				System.out.println(nodesList.get(i));		
 			}
 			System.out.println("Tree root : " + root + "\n\n");
-		}
-		
+		}		
 		
 		return root;
 	}
@@ -307,9 +333,45 @@ public class TextZip {
 		*         bw:      the BitWriter used to write the compressed bits to file
 		*/
 	public static void compress(FileReader fr, TreeNode<CharFreq> huffman, BitWriter bw) throws Exception {
+		String[] asciiTable = new String[256];
+		
+		traverse(huffman, "", asciiTable);
+		
+		if(debug){
+			for(int i = 0; i < asciiTable.length; i++){
+				System.out.println("[" + i + "]" + asciiTable[i]);
+			}		
+		}
+		String val;
+		int c;
+		if(debug)
+			System.out.println();
+		while((c = fr.read()) != -1){			
 
-		// IMPLEMENT THIS METHOD
+			val = asciiTable[c];
 
+			for(int i = 0; i < val.length(); i++){
+				if (val.length() == 1|| i == val.length() - 1){
+					if(val.substring(i).equals("0")){
+						if(debug)
+							System.out.print("0");
+						bw.writeBit(0);
+					} else {
+						if(debug)
+							System.out.print("1");
+						bw.writeBit(1);
+					}
+				} else if (val.substring(i,i+1).equals("0")){
+					if(debug)
+						System.out.print("0");
+					bw.writeBit(0);
+				} else {
+					if(debug)
+						System.out.print("1");
+					bw.writeBit(1);
+				}
+			}
+		}
 	}
 
 	/**
@@ -327,9 +389,46 @@ public class TextZip {
 		*         TreeNode is a CharFreq object.
 		*/
 	public static ArrayList<TreeNode<CharFreq>> readFrequencies(String inputFreqFile) throws Exception {
+		ArrayList<TreeNode<CharFreq>> treeNode = new ArrayList<TreeNode<CharFreq>>();
+		FileReader fr = new FileReader(inputFreqFile);
+		ArrayList<Integer> ints = new ArrayList<Integer>();
+		
+		int c, val;
+		while((c = fr.read()) != -1){			
+			if(debug)
+				System.out.print(c + " ");
+			ints.add(c);		
+		}
+		
+		for(int i = 0; i < ints.size(); i++){
+			if(debug)
+			System.out.print(ints.get(i) + " ");
+		}
+		char ch;
+		String s = "";
 
-		// IMPLEMENT THIS METHOD
-		return null;
+		for(int i = 0; i < ints.size(); i++){
+			if(ints.get(i) == 32 && ints.get(i + 1) != 32){
+				val = ints.get(i - 1);
+				ch = (char)val;
+				for(int j = i + 1; j < ints.size(); j++){
+					if(ints.get(j) != 10){
+						val = ints.get(j);
+						s += (char)val;
+					} else {
+						i = j + 1;
+						break;							
+					}
+				}
+				if(debug)
+					System.out.println("char :" + ch + ", Freq :" + s);
+				treeNode.add(new TreeNode<CharFreq>(new CharFreq(ch, Integer.parseInt(s))));
+				s = "";
+			}
+		}
+		
+				
+		return treeNode;
 	}
 	
 	/**
@@ -349,7 +448,11 @@ public class TextZip {
 		
 	}
 	
-
+	public static void toDisplay(String file){
+		System.out.println(file + " prefix codes by hche608");
+		System.out.println("character code: ");
+	}
+	
 	/* This TextZip application should support the following command line flags:
 
 	QUESTION 1 PART 1
@@ -413,6 +516,8 @@ public class TextZip {
 			pw.close();
 			// Build the huffman tree
 			TreeNode<CharFreq> n = buildTree(trees);
+			// Display something
+			toDisplay("" + args[1]);
 			// Display the codes
 			traverse(n, "");
 		}
