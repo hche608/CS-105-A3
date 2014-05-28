@@ -92,23 +92,25 @@ public class TextZip {
 	public static void traverse(TreeNode<CharFreq> t, String code) {
 
 		// IMPLEMENT THIS METHOD
-		if(debug){
+		if(!debug){
 			System.out.println( t + " " + t.getLeft() + " "+ t.getRight());
 		}
-		
-		System.out.println("get code");
-		
-		if( t == null){
-			System.out.println("Empty tree!");
-		} else if (t.isLeaf()){
-			System.out.print(t.getItem().getChar() + " : ");
-		} else if (t.getLeft() != null){
-			System.out.print("0");
-			traverse(t.getLeft(), code += "0");
-		} else if (t.getRight() != null){
-			System.out.print("1");
-			traverse(t.getRight(), code += "1");
+				
+		if( t != null){
+			if (t.isLeaf()){
+				System.out.println(t.getItem().getChar() + " : ");
+			} else {
+				if (t.getLeft() != null){
+					System.out.print("0");
+					traverse(t.getLeft(), code += "0");
+				}
+				if (t.getRight() != null){
+					System.out.print("1");
+					traverse(t.getRight(), code += "1");
+				}
+			}
 		}
+		
 		
 		
 		
@@ -202,7 +204,7 @@ public class TextZip {
 		}
 		
 		if(debug)
-			System.out.println("Sorted nodes list: ");
+			System.out.println("Sorted nodes Size " + list.size() + " list: ");
 		for(int i = 0; i < list.size(); i++){
 			if(debug)
 				System.out.println(list.get(i));
@@ -257,24 +259,35 @@ public class TextZip {
 			for(int i = 0; i < trees.size(); i++){
 				if(trees.size() == 1){
 					if(sumFreq >= trees.get(i).getItem().getFreq()){
-						trees.add(i + 1,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+						trees.add(new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+						break;
+					} else {
+						trees.add(i,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+						break;
 					}
-				} else if(sumFreq < trees.get(i).getItem().getFreq() && sumFreq >= trees.get(i - 1).getItem().getFreq()){
-					trees.add(i,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
-					break;
-				} 
+				} else {
+					if(sumFreq < trees.get(i).getItem().getFreq()){
+						trees.add(i,new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+						break;
+					} else if(i == trees.size() - 1){
+						trees.add(new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
+						break;
+					}
+				}
 			}
 		}
+		
 		sumFreq = nodesList.get(nodesList.size()-2).getItem().getFreq() + nodesList.get(nodesList.size()-1).getItem().getFreq();
 		nodesList.add(new TreeNode<CharFreq>(new CharFreq('\u0000', sumFreq), nodesList.get(nodesList.size()-2), nodesList.get(nodesList.size()-1)));
 		root = nodesList.get(nodesList.size() - 1);
+		
 		if(debug){
 			System.out.println("Trees size : " + trees.size());
-			System.out.println("\nTree nodes list: ");
+			System.out.println("\nTree nodes Size is " + nodesList.size() + " list: ");
 			for(int i = 0; i < nodesList.size();i++){
 				System.out.println(nodesList.get(i));		
 			}
-			System.out.println("Tree root : " + root);
+			System.out.println("Tree root : " + root + "\n\n");
 		}
 		
 		
