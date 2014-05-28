@@ -85,7 +85,6 @@ public class TextZip {
 		}
 		if(debug)		
 			System.out.println("\n" + val);	
-		
 
 	}
 
@@ -212,6 +211,7 @@ public class TextZip {
 				pw.println(ch + " " + asciiMappingVal[i]);
 			}
 		}
+		/*
 		for(int i = 0; i < list.size();i++){
 			for(int j = 0; j < list.size() - 1; j++){
 				CharFreq current = list.get(j);
@@ -220,7 +220,7 @@ public class TextZip {
 					Collections.swap(list, j, j + 1);
 				}
 			}
-		}
+		}*/
 		
 		if(debug)
 			System.out.println("Sorted nodes Size " + list.size() + " list: ");
@@ -263,9 +263,6 @@ public class TextZip {
 				}
 			}
 		}
-		
-		
-		
 		
 		TreeNode<CharFreq> root;
 
@@ -429,9 +426,7 @@ public class TextZip {
 				treeNode.add(new TreeNode<CharFreq>(new CharFreq(ch, Integer.parseInt(s))));
 				s = "";
 			}
-		}
-		
-				
+		}		
 		return treeNode;
 	}
 	
