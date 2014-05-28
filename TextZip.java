@@ -11,7 +11,7 @@ UPI: hche608
 **/
 
 public class TextZip {
-	static boolean debug = true;
+	static boolean debug = false;
 	/**
 		* This method generates the huffman tree for the text: "abracadabra!"
 		*
@@ -64,6 +64,8 @@ public class TextZip {
 					if(currentNode.isLeaf()){
 						val += currentNode.getItem().getChar();
 						currentNode = huffman;
+						fw.write(val);
+						val = "";
 					}
 				}
 			}
@@ -75,13 +77,15 @@ public class TextZip {
 					if(currentNode.isLeaf()){
 						val += currentNode.getItem().getChar();
 						currentNode = huffman;
+						fw.write(val);
+						val = "";
 					}
 				}
 			}
 		}
 		if(debug)		
 			System.out.println("\n" + val);	
-		fw.write(val);
+		
 
 	}
 
