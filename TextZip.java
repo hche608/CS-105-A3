@@ -6,7 +6,7 @@ COMPSCI 105 S1 C, 2014
 Assignment Three Question 1
 
 @author  	Name: Hao CHEN 
-UPI: hche608
+			UPI: hche608
 @version	DATE: May 2014
 **/
 
@@ -65,6 +65,8 @@ public class TextZip {
 						val += currentNode.getItem().getChar();
 						currentNode = huffman;
 						fw.write(val);
+						if(debug)		
+							System.out.println("\n" + val);	
 						val = "";
 					}
 				}
@@ -78,14 +80,13 @@ public class TextZip {
 						val += currentNode.getItem().getChar();
 						currentNode = huffman;
 						fw.write(val);
+						if(debug)		
+							System.out.println("\n" + val);	
 						val = "";
 					}
 				}
 			}
 		}
-		if(debug)		
-			System.out.println("\n" + val);	
-
 	}
 
 	/**
@@ -100,8 +101,8 @@ public class TextZip {
 		if(debug){
 			System.out.println( t + " " + t.getLeft() + " "+ t.getRight());
 		}
-	
-		if( t != null){
+		
+		if(t != null){
 			if (t.isLeaf()){
 				System.out.println(t.getItem().getChar() + " : " + code);
 			} else {
@@ -211,17 +212,7 @@ public class TextZip {
 				pw.println(ch + " " + asciiMappingVal[i]);
 			}
 		}
-		/*
-		for(int i = 0; i < list.size();i++){
-			for(int j = 0; j < list.size() - 1; j++){
-				CharFreq current = list.get(j);
-				CharFreq next = list.get(j + 1);
-				if(current.compareTo(next) > 0){
-					Collections.swap(list, j, j + 1);
-				}
-			}
-		}*/
-		
+
 		if(debug)
 			System.out.println("Sorted nodes Size " + list.size() + " list: ");
 		for(int i = 0; i < list.size(); i++){
@@ -440,13 +431,22 @@ public class TextZip {
 	public static void statistics(String file1, String file2) {
 		File compressedFile =new File(file1);
 		File originalFile =new File(file2);
-		System.out.println(file1 + " decompressed by hche608");
+		if(file1.toLowerCase().contains(".txt")){
+			System.out.println(file1 + " decompressed by hche608");
+		} else {
+			System.out.println(file2 + " compressed by hche608");
+		}		
 		System.out.println("Size of the compressed file: " + compressedFile.length() + " bytes");
 		System.out.println("Size of the original file: " + originalFile.length() + " bytes");
-		System.out.println("Compressed ratio: " + (compressedFile.length() * 100.0 / originalFile.length()) + "%");
-		
+		System.out.println("Compressed ratio: " + (compressedFile.length() * 100.0 / originalFile.length()) + "%");		
 	}
 	
+	/**
+		* This method prints out the codes table 
+		*
+		* @param  file: full name of the first file
+		*         
+		*/	
 	public static void toDisplay(String file){
 		System.out.println(file + " prefix codes by hche608");
 		System.out.println("character code: ");
