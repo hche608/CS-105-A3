@@ -253,7 +253,7 @@ public class TextZip {
 					Collections.swap(trees, j, j + 1);
 				}
 			}
-		}
+		}//sort the list samll to large
 		
 		TreeNode<CharFreq> root;
 
@@ -398,7 +398,7 @@ public class TextZip {
 		}
 		char ch;
 		String s = "";
-
+		//locate the position as [ch]32[freq]10
 		for(int i = 0; i < ints.size(); i++){
 			if(ints.get(i) == 32 && ints.get(i + 1) != 32){
 				val = ints.get(i - 1);
