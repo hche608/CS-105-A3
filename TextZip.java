@@ -438,7 +438,7 @@ public class TextZip {
 		}		
 		System.out.println("Size of the compressed file: " + compressedFile.length() + " bytes");
 		System.out.println("Size of the original file: " + originalFile.length() + " bytes");
-		System.out.println("Compressed ratio: " + (compressedFile.length() * 100.0 / originalFile.length()) + "%");		
+		System.out.println("Compressed ratio: " + (compressedFile.length() / (originalFile.length() * 1.0) * 100) + "%");		
 	}
 	
 	/**
